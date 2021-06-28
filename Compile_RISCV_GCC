@@ -1,0 +1,71 @@
+= Purpose =
+We can't use the .tar.gz because if wrong libc binaries.  This document shows how to compile it from source
+
+= Instructions =
+Follow steps based on your distro
+
+= Ubuntu xx? =
+
+<source lang="bash">
+sudo apt-get install autoconf automake autotools-dev curl libmpc-dev libmpfr-dev libgmp-dev libusb-1.0-0-dev gawk build-essential bison flex texinfo gperf libtool patchutils bc zlib1g-dev device-tree-compiler pkg-config git libexpat1-dev libncurses6-dev
+</source>
+
+= Ubuntu 18.04 =
+
+<source lang="bash">
+sudo apt-get install autoconf automake autotools-dev curl libmpc-dev libmpfr-dev libgmp-dev libusb-1.0-0-dev gawk build-essential bison flex texinfo gperf libtool patchutils bc zlib1g-dev device-tree-compiler pkg-config git libexpat1-dev libncurses-dev
+</source>
+
+Ben also had to run
+<source lang="bash">
+sudo ln -s /usr/lib/x86_64-linux-gnu/libmpfr.so.6 /usr/lib/x86_64-linux-gnu/libmpfr.so.4
+</source>
+
+= openSUSE =
+
+<source lang="bash">
+sudo zypper install autoconf automake curl dtc libmpc-devel mpfr-devel gmp-devel gawk build-essential bison flex texinfo gperf libtool patchutils bc zlib-devel libusb-1_0-devel git gcc-c++
+sudo zypper install -t pattern devel_basis
+</source>
+
+= Linux Shared =
+For both Ubuntu and Suse  (this process takes over an hour)
+
+<source lang="bash">
+git clone https://github.com/riscv/riscv-tools.git
+cd riscv-tools
+git checkout ef03b6a70d9baa03943661bce37b9f70ad36f706
+git submodule update --init --recursive
+sudo bash
+export RISCV=/opt/riscv
+mkdir -p $RISCV
+./build-rv32ima.sh
+</source>
+
+Ignore riscv-openocd error and add RISCV env variable to ~/.bashrc using your preferred editor
+
+<source lang="bash">
+export RISCV=/opt/riscv
+</source>
+
+and
+
+<source lang="bash">
+source ~/.bashrc
+</source>
+
+at the cmd line.
+
+= Troubleshooting =
+if the build fails early on due to missing tools or something, you will need to clear out (ignored files) before you can try again.  For instance
+<source lang="bash">
+cd riscv-openocd
+git clean -f -X
+cd ..
+./build-rv32ima.sh
+</source>
+
+= See Also =
+* https://github.com/riscv/riscv-tools/issues/134
+* https://github.com/riscv/riscv-tools
+
